@@ -1,0 +1,62 @@
+﻿@page
+@model NutNut.Pages.SignUpModel
+@{
+}
+
+<div class="container mt-5 w-50">
+	<h2 class="text-center">Sign Up for NutNut</h2>
+	<form id="form" method="post">
+		<div class="form-group">
+			<label asp-for="Username" for="username">Username:</label>
+			<input asp-for="Username" type="text" class="form-control" id="username" name="username" required>
+		</div>
+		<div class="form-group">
+			<label asp-for="Password" for="password">Password:</label>
+			<input asp-for="Password" type="password" class="form-control" id="password" name="password" required>
+		</div>
+		<div class="form-group">
+			<label for="first_name">First Name:</label>
+			<input asp-for="FirstName" type="text" class="form-control" name="first_name" required>
+		</div>
+		<div class="form-group">
+			<label asp-for="LastName" for="last_name">Last Name:</label>
+			<input asp-for="LastName" type="text" class="form-control" name="last_name">
+		</div>
+		<div class="form-group">
+			<label asp-for="Email" for="email">Email:</label>
+			<input asp-for="Email" type="email" class="form-control" name="email" required>
+		</div>
+		<div class="form-group">
+			<label asp-for="PhoneNumber" for="phone_no">Phone Number:</label>
+			<input asp-for="PhoneNumber" type="tel" class="form-control" name="phone_no" required>
+		</div>
+		<button type="button" onclick="submit_form()" class="mt-2 btn btn-primary">Sign up</button>
+	</form>
+
+		<p id="id-unique" class=" mt-2 text-danger"></p>
+
+
+</div>
+<script>
+	document.title = "Sign up for NutNut";
+function submit_form() {
+	const form_data = new FormData(document.getElementById("form"));
+
+	fetch("@Url.Page("SignUp")", {
+		method: "POST",
+		body: form_data
+	})
+	.then(response => response.json())
+	.then(data => {
+		if (data.success) {
+			document.querySelectorAll('.container')[2].innerHTML = `<p class="text-success">Sign up successful</p>`;
+
+			setTimeout(() => {
+				window.location.href = "/";
+			}, 2000);
+		} else {
+			document.getElementById("id-unique").innerText = "Username or email already exists in our database. Try something unique, please.";
+		}
+	})
+}
+</script>

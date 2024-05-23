@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewData["Title"] - NutNut</title>
+	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/NutNut.styles.css" asp-append-version="true" />
+</head>
+<body>
+	<header>
+		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+			<div class="container">
+				<a class="navbar-brand" asp-area="" asp-page="/Index">NutNut</a>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+						aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				@if (NutNut.Pages.SignedIn.IsSignedIn)
+				{
+					<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+						<ul class="navbar-nav flex-grow-1">
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-page="/HomePage">Home</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-page="/HomePage">Movies</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-page="/TVShows">TV Shows</a>
+							</li>
+						</ul>
+							 <div class="dropdown">
+						<a class="nav-link text-dark dropdown-toggle" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<img src="https://i.pravatar.cc/30?img=@MemoryDB.ImgId" alt="User Avatar" id="user" class="rounded-circle mx-2" style="width: 30px; height: 30px; cursor: pointer;">
+							@MemoryDB.user[0]
+						</a>
+							<div class="dropdown-menu" aria-labelledby="userDropdown">
+							<a class="dropdown-item" href="#">Profile</a>
+							<a class="dropdown-item" href="#">Settings</a>
+							<div class="dropdown-divider"></div>
+							<a id="sign-out" class="dropdown-item btn">Sign out</a>
+						</div>
+					</div>
+						
+					</div>
+				}
+			</div>
+		</nav>
+	</header>
+	<div class="container">
+		<main role="main" class="pb-3">
+			@RenderBody()
+		</main>
+	</div>
+
+	<footer class="border-top footer text-muted">
+		<div class="container">
+			&copy; 2024 - NutNut - <a asp-area="" asp-page="/Privacy">Privacy</a>
+		</div>
+	</footer>
+
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="~/js/site.js" asp-append-version="true"></script>
+
+	@await RenderSectionAsync("Scripts", required: false)
+
+	<script>
+		document.getElementById("sign-out")?.addEventListener("click", () => {
+			window.location.href = "/SignOut";
+
+		});
+	</script>
+
+</body>
+</html>

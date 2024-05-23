@@ -1,0 +1,62 @@
+﻿@page
+@model NutNut.Pages.JoinModel
+@{
+	ViewData["Title"] = "Sign up for the premium account";
+}
+
+@if (!NutNut.Pages.SignedIn.IsSignedIn)
+{
+	Response.Redirect("/");
+}
+
+<div class="container mt-5 w-50">
+	<h2 class="text-center mb-3">Join Premium NutNut</h2>
+	<form id="form" method="post">
+		<div class="form-group">
+			<label asp-for="Username" for="username">Username:</label>
+			<input asp-for="Username" id="username" type="text" class="form-control" id="username" maxlength="20" value="@Model.Username" contenteditable="false" required>
+		</div>
+		<div class="form-group">
+			<label asp-for="FullName">Card holder's full name:</label>
+			<input asp-for="FullName" type="text" class="form-control" maxlength="50" required>
+		</div>
+		<div class="form-group">
+			<label asp-for="CardNumber">Card number:</label>
+			<input asp-for="CardNumber" id="card-number" type="text" class="form-control" maxlength="16" required>
+		</div>
+		<div class="form-group">
+			<label asp-for="ExpiryDate" class="control-label">Expiration Date (MM/YYYY):</label>
+			<input asp-for="ExpiryDate" id="expiry" class="form-control" maxlength="7" required>
+		</div>
+
+		<div class="form-group">
+			<label asp-for="CVC">CVC:</label>
+			<input asp-for="CVC" type="text" id="cvc" class="form-control" maxlength="3" required>
+		</div>
+		
+		<button type="button" onclick="submit_form()" class="mt-2 btn btn-primary">Join now</button>
+	</form>
+
+		<p id="id-unique" class="mt-2 text-danger"></p>
+</div>
+<script>
+function submit_form() {
+	if (///[0-9]{13-16}/.test(document.getElementById('card-number').value) &&
+		///(0[1-9]|1[0-2])-(20[2-9][0-9]|2[1-9][0-9]{2})/.test(document.getElementById('expiry').value) &&
+	//	/[0-9]/.test(document.getElementById('cvc').value)
+	true
+	) {
+		const form_data = new FormData(document.getElementById("form"));
+
+		fetch("@Url.Page("Join")", {
+			method: "POST",
+			body: form_data
+		})
+		.then(() => {
+			window.location.href = "/";
+		});
+	} else {
+		console.log("NOT OK");
+	}
+}
+</script>

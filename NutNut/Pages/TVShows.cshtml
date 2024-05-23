@@ -1,0 +1,82 @@
+﻿@page
+@model NutNut.Pages.TVShowsModel
+@{
+	ViewData["Title"] = "TV Shows";
+}
+@if (!NutNut.Pages.SignedIn.IsSignedIn)
+{
+	Response.Redirect("/");
+}
+
+
+
+<div class=" text-center">
+	<h1 class="display-4 text-dark">Welcome to NutNut</h1>
+	<p class="lead">Start watching...</p>
+</div>
+
+
+
+<div id="result" class="container mt-5">
+	<div class="row">
+		@foreach (var show in MemoryDB.shows)
+		{
+					<div class="col-md-3">
+						<div class="card h-100">
+							<img src="https://cdn.pixabay.com/photo/2022/02/20/21/18/laptop-7025341_1280.jpg" class="card-img-top btn" alt="@show.Name">
+							<div class="card-body">
+								<h5 class="card-title">@show.Name</h5>
+								<p class="card-text">@show.Description</p>
+								<a id="@show.Id" href="/WatchShow?id=@show.Id" class="watch-now btn btn-primary bg-primary bg-gradient">Watch Now</a>
+							</div>
+						</div>
+					</div>
+		}
+
+  </div>
+</div>
+
+<div class="container mt-5 mb-5">
+  <div class="row justify-content-center">
+	<div class="col-md-6 text-center">
+		<form id="form" method="post">
+			<button class="btn btn-secondary" type="button" onclick="submit_form()">Load more</button>
+		</form>
+	</div>
+  </div>
+</div>
+
+@section Scripts {
+			<script>
+				function submit_form() {
+					const form_data = new FormData(document.getElementById("form"));
+
+					fetch("@Url.Page("TVShows")", {
+						method: "POST",
+						body: form_data
+					})
+					.then(response => response.json())
+					.then(data => {
+						const nig = document.getElementById("result").querySelector(".row");
+						nig.innerHTML = ``;
+						data.shows.forEach(show => {
+								const new_show_html = '<div class="col-md-3">' +
+												'  <div class="card h-100">' +
+												`    <img src="https://cdn.pixabay.com/photo/2022/02/20/21/18/laptop-7025341_1280.jpg" class="card-img-top btn" alt="${show.name}">` +
+												'    <div class="card-body">' +
+												`      <h5 class="card-title">${show.name}</h5>` +
+												`		<p class="card-text">${show.description}</p>` +
+												`		<a id="${show.id}" href="/WatchShow?id=${show.id}" class="watch-now btn btn-primary bg-primary bg-gradient">Watch Now</a>` +
+												'    </div>' +
+												'  </div>' +
+												'</div>';
+
+								nig.innerHTML += new_show_html;
+						});
+					})
+					.catch(error => {
+						console.log("Error:", error);
+					});
+				}
+			</script>
+}

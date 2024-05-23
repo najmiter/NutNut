@@ -1,0 +1,28 @@
+﻿@page
+@model NutNut.Pages.NoMembershipErrorModel
+@{
+    ViewData["Title"] = "You don't have a membership";
+}
+
+@if (!NutNut.Pages.SignedIn.IsSignedIn)
+{
+    Response.Redirect("/");
+}
+
+<h1 class="text-danger">NO MEMBERSHIP!</h1>
+<h6 class="text-danger">To watch a title, you need to have a membership.</h6>
+
+@* @if (Model.ShowRequestId)
+{
+        <p>
+            <strong>Request ID:</strong> <code>@Model.RequestId</code>
+        </p>
+} *@
+
+<h3 class="mt-5">Want to join?</h3>
+<p>
+    With as less as <strong>Rs. 1,200/month</strong>, start watching unlimited titles in 4K.
+</p>
+<p>
+    <a href="/Join" class="btn btn-primary font-weight-bold text-uppercase">join now</a>
+</p>

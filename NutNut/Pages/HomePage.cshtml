@@ -1,0 +1,82 @@
+﻿@page
+@model NutNut.Pages.NutNut___Home_PageModel
+@{
+	ViewData["Title"] = "Home Page";
+}
+
+@if (!NutNut.Pages.SignedIn.IsSignedIn)
+{
+	Response.Redirect("/");
+}
+
+<div class=" text-center">
+	<h1 class="display-4 text-dark">Welcome to NutNut</h1>
+	<p class="lead">Start watching...</p>
+</div>
+
+
+
+<div id="result" class="container mt-5">
+	<div class="row">
+		@foreach (var movie in MemoryDB.movies)
+		{
+				<div class="col-md-3">
+					<div class="card h-100">
+						<img src="@movie.Poster" class="card-img-top btn" alt="@movie.Name">
+						<div class="card-body">
+							<h5 class="card-title">@movie.Name</h5>
+							<p class="card-text">Released in @movie.ReleaseYear and directed by @movie.Director.</p>
+							<a id="@movie.Id" href="/Watch?id=@movie.Id" class="watch-now btn btn-primary bg-primary bg-gradient">Watch Now</a>
+						</div>
+					</div>
+				</div>
+		}
+
+  </div>
+</div>
+
+<div class="container mt-5 mb-5">
+  <div class="row justify-content-center">
+	<div class="col-md-6 text-center">
+		<form id="form" method="post">
+			<button class="btn btn-secondary" type="button" onclick="submit_form()">Load more</button>
+		</form>
+	</div>
+  </div>
+</div>
+
+@section Scripts {
+		<script>
+			function submit_form() {
+				const form_data = new FormData(document.getElementById("form"));
+
+				fetch("@Url.Page("/HomePage")", {
+					method: "POST",
+					body: form_data
+				})
+				.then(response => response.json())
+				.then(data => {
+					const nig = document.getElementById("result").querySelector(".row");
+					nig.innerHTML = ``;
+					//console.log(data.movies);
+					data.movies.forEach(movie => {
+						const new_movie_html = '<div class="col-md-3">' +
+											'  <div class="card h-100">' +
+											'    <img src="' + movie.poster + '" class="card-img-top btn" alt="' + movie.name + '">' +
+											'    <div class="card-body">' +
+											'      <h5 class="card-title">' + movie.name + '</h5>' +
+											`      <p class="card-text">Released in ${movie.releaseYear} and directed by ${movie.director}.</p>` +
+											'      <a id="' + movie.id + '" href="/Watch?id=' + movie.id + '" class="watch-now btn btn-primary bg-primary bg-gradient">Watch Now</a>' +
+											'    </div>' +
+											'  </div>' +
+											'</div>';
+
+						nig.innerHTML += new_movie_html;
+					});
+				})
+				.catch(error => {
+					console.error("Error:", error);
+				});
+			}
+		</script>
+}

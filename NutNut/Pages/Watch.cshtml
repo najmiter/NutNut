@@ -1,0 +1,48 @@
+﻿@page 
+@model NutNut.Pages.WatchModel
+@{
+}
+
+@if (!(Model.IsMember))
+{
+	Response.Redirect("/NoMembershipError");
+}
+
+<div id="card">
+	<h1 id="title" class="display-6"></h1>
+	<div class="pt-1" id="description"></div>
+</div>
+<script>
+	@{
+		var moviesJson = Newtonsoft.Json.JsonConvert.SerializeObject(MemoryDB.movies);
+	}
+
+	const _movies = @Html.Raw(moviesJson);
+	//console.log(_movies);
+
+	const movies = {};
+	if (!(Object.keys(movies).length)) {
+		for (const each of _movies) {
+			movies[each.Id] = each;
+		}
+	}
+	const queryParams = new URLSearchParams(window.location.search);
+	const id = queryParams.get('id');
+
+	const title = document.getElementById('title');
+	const des = document.getElementById('description');
+
+	document.title = `Watch ${movies[id].Name} - NutNut`;
+
+	
+	title.innerText = `Watch '${movies[id].Name}'`;
+	des.innerText = `${movies[id].Name} was released in ${movies[id].ReleaseYear}.
+						Directed by ${movies[id].Director}, it's rated ${movies[id].Ratings}/10 on IMDB.
+						Stars: ${movies[id].Stars.join(", ")}
+						
+`;
+
+	const img = document.createElement('img');
+	img.setAttribute('src', movies[id].Poster);
+	document.getElementById('card').appendChild(img);
+</script>

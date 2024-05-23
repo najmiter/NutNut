@@ -1,0 +1,56 @@
+﻿@page
+@model NutNut.Pages.WatchShowModel
+@{
+	ViewData["Title"] = "Watch";
+}
+
+@if (!(Model.IsMember))
+{
+	Response.Redirect("/NoMembershipError");
+}
+
+<script>
+	@{
+		var showsJson = Newtonsoft.Json.JsonConvert.SerializeObject(MemoryDB.shows);
+	}
+
+	const _shows = @Html.Raw(showsJson);
+
+
+	const shows = {};
+	if (!Object.keys(shows).length) {
+		for (const each of _shows) {
+			shows[each.Id] = each;
+		}
+	}
+
+	const queryParams = new URLSearchParams(window.location.search);
+	const id = queryParams.get('id');
+	//console.log(shows);
+
+
+</script>
+<div id="card">
+	<h1 id="title" class="display-6"></h1>
+	<div class="pt-1" id="description"></div>
+</div>
+<script>
+	const title = document.getElementById('title');
+	const des = document.getElementById('description');
+
+	document.title = `Watch ${shows[id].Name} - NutNut`;
+
+	title.innerText = `Watch '${shows[id].Name}'`;
+	des.innerText = `${shows[id].Name} was released in ${shows[id].ReleaseYear}.
+					 Directed by ${shows[id].Director}, it's rated ${shows[id].Rating}.
+					 Stars: ${shows[id].Stars}
+					 Story: ${shows[id].Description}
+
+`;
+
+
+	const img = document.createElement('img');
+	img.setAttribute('src', "https://cdn.pixabay.com/photo/2022/02/20/21/18/laptop-7025341_1280.jpg");
+	document.getElementById('card').appendChild(img);
+
+</script>

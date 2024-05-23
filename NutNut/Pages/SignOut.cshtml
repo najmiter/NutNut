@@ -1,0 +1,21 @@
+﻿@page
+@model NutNut.Pages.SignOutModel
+@{
+}
+<div class="container-fluid d-flex align-items-center justify-content-center vh-100">
+    <div class="text-center">
+        <h1>Signing Out</h1>
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only"></span>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.title = "Signing out...";
+    window.onload = () => {
+        setTimeout(() => {
+            window.location.href = "/";
+        }, 1000);
+    }
+</script>
